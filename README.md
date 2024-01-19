@@ -9,6 +9,8 @@ O projeto foi desenvolvido e instanciado seguindo as seguintes especificacões
 * Node: v21.6.0
 * PG: 14.10 (pgadmin como DBMS)
 
+Foi utilizado Nextjs para desenvolvimento, logo, é um sistema contendo React em front end, e Node se encarregando dos handles no server side.
+
 Para rodar o projeto, siga os passos dentro da pasta do projeto (depois de ter instalado os recursos especificados):
 
 ```bash
