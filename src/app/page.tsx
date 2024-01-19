@@ -8,7 +8,10 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [clientes, setClientes] = useState([])
+  const [clientesFilter, setClientesFilter] = useState([])
+
   const [novoClienteModal, setNovoClienteModal] = useState(false)
+  const [pesquisar, setPesquisar] = useState('')
 
   const init = async () => {
     const response = await fetch(`http://localhost:3000/api/get_clients`)
@@ -29,6 +32,24 @@ export default function Home() {
       })
 
       setClientes(clientes)
+      setClientesFilter(clientes)
+    }
+  }
+
+  const pesquisarCliente = async (valor: string) => {
+    console.log(`Filtrando =>`, valor)
+
+    if(valor.length > 0) {
+      setPesquisar(valor)
+
+      let _clientes = clientes.filter((cliente: any) => {
+        return cliente.nome.toLowerCase().includes(valor.toLowerCase()) || cliente.email.toLowerCase().includes(valor.toLowerCase()) || cliente.telefone.toLowerCase().includes(valor.toLowerCase()) || cliente.endereco.x.toLowerCase().includes(valor.toLowerCase()) || cliente.endereco.y.toLowerCase().includes(valor.toLowerCase())
+      }) 
+
+      setClientesFilter(_clientes)
+    } else {
+      setPesquisar(valor)
+      setClientesFilter(clientes)
     }
   }
 
@@ -38,10 +59,6 @@ export default function Home() {
 
   const deletarCliente = (id: number) => {
     console.log(id)
-  }
-
-  const novoCliente = () => {
-    setNovoClienteModal(true)
   }
 
   const refreshDados = () => {
@@ -82,7 +99,7 @@ export default function Home() {
             <Box sx={{
               marginBottom: `2rem`,
             }}>
-              <TextField id="outlined-basic" label="Pesquisar" variant="outlined" />
+              <TextField id="outlined-basic" label="Pesquisar" variant="outlined" value={pesquisar} onChange={(e) => pesquisarCliente(e.target.value)} />
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
@@ -94,7 +111,7 @@ export default function Home() {
               </Button>
             </Box>
             <Acordeao 
-              clientes={clientes} 
+              clientes={clientesFilter} 
               deletarCliente={deletarCliente} 
               refreshAll={refreshDados} 
               callNewClient={novoClienteModal}
