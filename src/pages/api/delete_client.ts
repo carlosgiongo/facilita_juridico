@@ -15,7 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         res.status(200).json(defaultResponse(200, 'OK', null));
     } catch(e) {
-        console.log(e);
-        res.status(500).json(defaultResponse(500, 'Erro ao listar os clientes', null));
+        res.status(500).json(defaultResponse(500, 'Erro ao listar os clientes', e));
     }
 }

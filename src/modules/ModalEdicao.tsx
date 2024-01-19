@@ -39,20 +39,44 @@ export default function ModalEdicao(props: ModalAlertaProps) {
     const handleClose = () => props.cancelar();
 
     const handleConfirmarEdicao = async () => {
-        const response = await fetch(`http://localhost:3000/api/edit_client`, {
-            method: `POST`,
-            headers: {
-                'Content-Type': `application/json`
-            },
-            body: JSON.stringify({
-                cliente:currentClient
-            })
-        });
+        if(currentClient.id == -1){
+            const response = await fetch(`http://localhost:3000/api/post_client`, {
+                method: `POST`,
+                headers: {
+                    'Content-Type': `application/json`
+                },
+                body: JSON.stringify({
+                    cliente:currentClient
+                })
+            });
 
-        const data = await response.json();
+            const data = await response.json();
 
-        if (data.status == 200) {
-            props.confirmar();
+            if (data.status == 200) {
+                props.confirmar();
+            } else {
+                alert(`Erro ao cadastrar cliente!`);
+                alert(data.mensagem)
+            }
+        } else {
+            const response = await fetch(`http://localhost:3000/api/edit_client`, {
+                method: `POST`,
+                headers: {
+                    'Content-Type': `application/json`
+                },
+                body: JSON.stringify({
+                    cliente:currentClient
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status == 200) {
+                props.confirmar();
+            } else {
+                alert(`Erro ao editar cliente!`);
+                alert(data.mensagem)
+            }
         }
     }
 

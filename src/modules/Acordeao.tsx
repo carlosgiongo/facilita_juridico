@@ -22,18 +22,24 @@ interface AcordeaoProps {
       y: string
     }
   }>,
+  callNewClient: boolean,
+  setNewClient: (value: boolean) => void,
   refreshAll: () => void,
   deletarCliente: (id: number) => void
 }
 
 export default function Acordeao(props: AcordeaoProps = {
   clientes: [],
+  callNewClient: false,
+  setNewClient: () => {},
   refreshAll: () => {},
   deletarCliente: () => {}
 }) {  
 
   const [modalAlerta, setModalAlerta] = React.useState(false);
   const [modalEdicao, setModalEdicao] = React.useState(false);
+  const [modalNovoCliente, setModalNovoCliente] = React.useState(false);
+
   const [clienteEvidencia, setClienteEvidencia] = React.useState({
     id: 0,
     nome: ``,
@@ -63,7 +69,9 @@ export default function Acordeao(props: AcordeaoProps = {
   const remake = () => {
     setModalAlerta(false);
     setModalEdicao(false);
+    setModalNovoCliente(false);
 
+    props.setNewClient(false);
     props.refreshAll()
   }
 
@@ -99,6 +107,34 @@ export default function Acordeao(props: AcordeaoProps = {
 
     setModalEdicao(true);
   }
+
+  const showNovoClienteModal = () => {
+    console.log(`showNovoClienteModal`);
+
+    setClienteEvidencia({
+      id: -1,
+      nome: ``,
+      email: ``,
+      telefone: ``,
+      endereco: {
+        x: `0`,
+        y: `0`
+      }
+    });
+
+    setModalNovoCliente(true);
+  }
+
+  const cancelNewClient = () => {
+    setModalNovoCliente(false);
+    props.setNewClient(false);
+  }
+
+  React.useEffect(() => {
+    if(props.callNewClient){
+      showNovoClienteModal();
+    }
+  }, [props.callNewClient]);
 
   return (
     <div>
@@ -150,6 +186,15 @@ export default function Acordeao(props: AcordeaoProps = {
         titulo="Editar Cliente"
         confirmar={() => remake()}
         cancelar={() => setModalEdicao(false)}
+      />
+
+      <ModalEdicao
+        cliente={clienteEvidencia}
+        aberto={modalNovoCliente}
+        texto="Confirme as informações do novo cliente"
+        titulo="Novo Cliente"
+        confirmar={() => remake()}
+        cancelar={() => cancelNewClient()}
       />
     </div>
   );

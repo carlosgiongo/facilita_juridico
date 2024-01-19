@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [clientes, setClientes] = useState([])
+  const [novoClienteModal, setNovoClienteModal] = useState(false)
 
   const init = async () => {
     const response = await fetch(`http://localhost:3000/api/get_clients`)
@@ -37,6 +38,10 @@ export default function Home() {
 
   const deletarCliente = (id: number) => {
     console.log(id)
+  }
+
+  const novoCliente = () => {
+    setNovoClienteModal(true)
   }
 
   const refreshDados = () => {
@@ -83,11 +88,18 @@ export default function Home() {
                 startIcon={<AddIcon />}
                 color="success"
                 sx={{marginLeft: `1rem`, padding: `1rem`}}
+                onClick={() => setNovoClienteModal(true)}
               >
                 Novo Cliente
               </Button>
             </Box>
-            <Acordeao clientes={clientes} deletarCliente={deletarCliente} refreshAll={refreshDados} />
+            <Acordeao 
+              clientes={clientes} 
+              deletarCliente={deletarCliente} 
+              refreshAll={refreshDados} 
+              callNewClient={novoClienteModal}
+              setNewClient={setNovoClienteModal}
+            />
         </Box>
       </Box>
     </Box>
